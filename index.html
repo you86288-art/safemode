@@ -42,9 +42,9 @@
   .shead .d{color:var(--muted);margin-top:8px;font-size:14px}
 
   /* TAB BAR */
-  .tabbar{height:var(--tabh);flex:none;display:flex;border-top:1px solid var(--line);background:rgba(8,11,22,.82);backdrop-filter:blur(14px);padding-bottom:env(safe-area-inset-bottom)}
-  .tabbar button{flex:1;background:none;border:none;cursor:pointer;color:var(--faint);position:relative;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;font-family:var(--kr);font-size:11.5px;transition:color .25s}
-  .tabbar button svg{width:22px;height:22px;stroke:currentColor;fill:none;stroke-width:1.6;transition:transform .25s}
+  .tabbar{height:var(--tabh);flex:none;display:flex;border-top:1px solid var(--line);background:rgba(10,14,30,.92);backdrop-filter:blur(14px);padding-bottom:env(safe-area-inset-bottom)}
+  .tabbar button{flex:1;background:none;border:none;cursor:pointer;color:#c7cce2;position:relative;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:5px;font-family:var(--kr);font-size:12px;font-weight:700;white-space:nowrap;transition:color .25s}
+  .tabbar button svg{width:24px;height:24px;stroke:currentColor;fill:none;stroke-width:1.7;transition:transform .25s}
   .tabbar button.active{color:var(--gold-soft)}
   .tabbar button.active svg{transform:translateY(-2px)}
 
@@ -55,6 +55,14 @@
   .herohook .g{color:var(--gold-soft);text-shadow:0 0 34px rgba(230,201,130,.35)}
   .herosub{margin:18px auto 0;font-size:15.5px;color:var(--muted);max-width:420px;line-height:1.7}
   .herophil{margin:18px auto 0;font-size:14.5px;color:var(--gold-soft);opacity:.9;font-style:italic}
+  .carousel{position:relative;min-height:150px;display:flex;align-items:center;justify-content:center;margin-top:6px}
+  .slide{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;opacity:0;transition:opacity .8s ease;pointer-events:none;padding:0 4px}
+  .slide.active{opacity:1;pointer-events:auto}
+  .slide h2{font-weight:700;font-size:clamp(24px,6.6vw,38px);line-height:1.3;letter-spacing:-.01em}
+  .slide h2 .g{color:var(--gold-soft);text-shadow:0 0 30px rgba(230,201,130,.32)}
+  .dots{display:flex;gap:8px;justify-content:center;margin-top:18px}
+  .dot{width:7px;height:7px;border-radius:50%;background:rgba(255,255,255,.22);cursor:pointer;transition:all .3s}
+  .dot.on{background:var(--gold);width:22px;border-radius:4px}
   .hubtop{display:flex;align-items:center;justify-content:center;gap:18px;margin-bottom:6px}
   .stat{display:flex;align-items:center;gap:7px;font-size:14px;color:var(--muted)}
   .stat b{font-family:var(--en);font-size:21px;color:var(--gold-soft);font-weight:600}
@@ -178,6 +186,30 @@
   .toast .gain{font-family:var(--en);font-size:20px;color:var(--gold-soft);font-weight:600}
   .toast .tmsg{font-size:14px;color:var(--ink);margin-top:3px}
   .toast .tbadge{font-size:13px;color:var(--violet);margin-top:5px}
+  /* ===== MOBILE FIT (phones: hero + quest in one view) ===== */
+  @media(max-width:600px){
+    .screen{padding:24px 20px calc(var(--tabh) + 20px)}
+    .hero{margin:2px 0 16px}
+    .hero .eyebrow{font-size:14px;margin-bottom:9px}
+    .herohook{font-size:clamp(27px,7.4vw,36px);line-height:1.18}
+    .herosub{font-size:14px;margin-top:13px}
+    .herophil{font-size:13px;margin-top:12px}
+    .vortex-host{width:150px;height:150px;margin:4px auto 2px}
+    .vortex .core{width:70px;height:70px}
+    .bloom-msg{font-size:13px;min-height:0;margin-bottom:10px}
+    .quest{padding:22px 20px;border-radius:20px}
+    .quest h3{font-size:21px}
+    .quest p{font-size:13.5px;margin-bottom:16px}
+    .quest .qbtn{padding:13px 28px;font-size:15px}
+    .meaning{font-size:12.5px;margin-top:12px}
+    .tomorrow{margin-top:16px;padding:11px;font-size:12.5px}
+    .badges{margin-top:18px;gap:8px}
+    .badge{width:58px}
+    .badge .bi{width:42px;height:42px;font-size:18px}
+  }
+  @media(max-width:600px) and (min-height:760px){
+    .vortex-host{width:190px;height:190px}
+  }
 </style>
 <script>
   // Vercel Analytics (자동 페이지뷰 + 커스텀 이벤트). 로컬/미지원 환경에선 조용히 무시됨.
@@ -197,9 +229,14 @@
       <div class="inner">
         <div class="hero" id="heroIntro">
           <div class="eyebrow">a 21-day project for your nervous system</div>
-          <h1 class="herohook">명상 앱마다<br>3일 만에 지운<br><span class="g">당신에게.</span></h1>
-          <p class="herosub">길게 앉지 않아도 돼요. 하루 5분, 게임처럼 —<br>예민한 뇌(ADHD·HSP)를 위한 신경계 리셋.</p>
-          <p class="herophil">불안을 없애는 게 아니라, "왔니" 하고 안아주는 것.</p>
+          <div class="carousel" id="carousel">
+            <div class="slide active"><h2>당신은 고장 난 게 아닙니다.<br><span class="g">너무 오래 생존모드였을 뿐.</span></h2></div>
+            <div class="slide"><h2>쉬는 날인데도,<br><span class="g">머릿속이 안 꺼지는 당신에게.</span></h2></div>
+            <div class="slide"><h2>하루 5분, 21일.<br><span class="g">예민한 뇌(ADHD·HSP)가 안전을 다시 배웁니다.</span></h2></div>
+            <div class="slide"><h2>불안을 없애는 앱이 아닙니다.<br><span class="g">불안과 안전하게 사는 법을 배우는 곳.</span></h2></div>
+            <div class="slide"><h2>"왔니."<br><span class="g">불안이 와도, 안아줄 수 있게.</span></h2></div>
+          </div>
+          <div class="dots" id="carDots"></div>
         </div>
         <div class="hubtop">
           <div class="stat">✦ <b id="lightNum">0</b> 빛</div>
@@ -253,9 +290,9 @@
 
   <nav class="tabbar">
     <button class="active" data-tab="home" onclick="go('home')"><svg viewBox="0 0 24 24"><path d="M4 11l8-7 8 7"/><path d="M6 10v9h12v-9"/></svg>홈</button>
-    <button data-tab="tracker" onclick="go('tracker')"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg>21일</button>
-    <button data-tab="breathe" onclick="go('breathe')"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="4"/><circle cx="12" cy="12" r="9" opacity=".5"/></svg>호흡</button>
-    <button data-tab="coach" onclick="go('coach')"><svg viewBox="0 0 24 24"><path d="M5 5h14v10H9l-4 4z"/></svg>코치</button>
+    <button data-tab="breathe" onclick="go('breathe')"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="4"/><circle cx="12" cy="12" r="9" opacity=".5"/></svg>호흡 가이드</button>
+    <button data-tab="tracker" onclick="go('tracker')"><svg viewBox="0 0 24 24"><path d="M6 3v18"/><path d="M6 4h11l-2 3.5L17 11H6"/></svg>21 퀘스트</button>
+    <button data-tab="coach" onclick="go('coach')"><svg viewBox="0 0 24 24"><path d="M20 11.5a7.5 7.5 0 0 1-10.9 6.7L4 19l1-4.2A7.5 7.5 0 1 1 20 11.5z"/></svg>마음 코치</button>
   </nav>
 </div>
 
@@ -320,9 +357,6 @@ function go(tab){
 // ---- HOME ----
 const C=2*Math.PI*37;
 function renderHome(){
-  const isNew = state.light===0 && D.size===0;
-  document.getElementById("heroIntro").style.display = isNew ? "block" : "none";
-  document.querySelector("#s-home .hubtop").style.display = isNew ? "none" : "flex";
   document.getElementById("lightNum").textContent=state.light;
   document.getElementById("streakNum").textContent=state.streak;
   // seeds orbiting (one per completed day)
@@ -454,6 +488,19 @@ async function sendCoach(){
 // ---- INIT ----
 (function(){const s=document.getElementById("stars");for(let i=0;i<50;i++){const t=document.createElement("i");t.style.left=Math.random()*100+"%";t.style.top=Math.random()*100+"%";t.style.animationDelay=(Math.random()*4)+"s";s.appendChild(t);}})();
 renderTracker(); renderHome(); buildBreathTabs(); document.getElementById("breathDesc").textContent=BREATHS[0].desc;
+
+// ---- CAROUSEL ----
+(function(){
+  const slides=document.querySelectorAll("#carousel .slide");
+  const dotsWrap=document.getElementById("carDots");
+  if(!slides.length||!dotsWrap) return;
+  let cur=0;
+  slides.forEach((_,i)=>{const d=document.createElement("div");d.className="dot"+(i===0?" on":"");d.onclick=()=>{show(i);reset();};dotsWrap.appendChild(d);});
+  const dots=dotsWrap.querySelectorAll(".dot");
+  function show(i){slides[cur].classList.remove("active");dots[cur].classList.remove("on");cur=i;slides[cur].classList.add("active");dots[cur].classList.add("on");}
+  let timer=setInterval(()=>show((cur+1)%slides.length),4500);
+  function reset(){clearInterval(timer);timer=setInterval(()=>show((cur+1)%slides.length),4500);}
+})();
 </script>
 </body>
 </html>
